@@ -1,0 +1,41 @@
+services:
+
+  frepple-3D:
+    image: ghcr.io/frepple/frepple-community:latest
+    container_name: frepple-3D
+    ports:
+      - 9000:80
+    depends_on:
+      - frepple-postgres
+    networks:
+      - backend
+    volumes:
+      - log-apache-community:/var/log/apache2
+      - log-frepple-community:/var/log/frepple
+      - config-frepple-community:/etc/frepple
+    environment:
+      POSTGRES_HOST: frepple-postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: VOOM-admin
+      POSTGRES_PASSWORD: Cambridge2021
+
+  frepple-postgres:
+    image: "postgres:13"
+    container_name: frepple-postgres
+    networks:
+      - backend
+    environment:
+      POSTGRES_PASSWORD: Cambridge2021
+      POSTGRES_DB: frepple
+      POSTGRES_USER: VOOM-admin
+      POSTGRES_DBNAME: frepple
+    volumes:
+       - ./data:/var/lib/postgresql/data
+
+volumes:
+  log-apache-community:
+  log-frepple-community:
+  config-frepple-community:
+
+networks:
+  backend:
